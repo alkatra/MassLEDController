@@ -2,27 +2,32 @@
 const floors = 8;
 const rooms = 20;
 const ledCount = 10;
-const MQTTuniqueURL = "/sit314sgfproject/";
+const MQTTuniqueURL = "/sit314sagufproject/";
 
 class LED {
-  constructor(state, dim, location) {
-    this.state = state; // True = lit up
-    this.dim = dim; // True = lit but dim
+  constructor(flipstate, dimsstate, location) {
+    this.flipstate = flipstate; // True = lit up
+    this.dimsstate = dimsstate; // True = lit but dimsstate
     this.location = location; // JSON = {floor:x, room:y, ledid:z}
   }
   flip() {
-    // Flip state of switch, and set dim to 0 if state is 0.
-    this.state = !this.state;
-    if (!this.state && this.dim) this.dim = !this.dim;
+    this.flipstate = !this.flipstate;
+    if (!this.flipstate && this.dimsstate) this.dimsstate = !this.dimsstate;
   }
-  dimlight() {
-    // Flip state of dim (yes/no)
-    if (this.state) this.dim = !this.dim;
+  dimsstatelight() {
+    if (this.flipstate) this.dimsstate = !this.dimsstate;
   }
   locate() {
     return this.location;
   }
+  returnstate() {
+    return this.flipstate;
+  }
+  returndimsstate() {
+    return this.dimsstate;
+  }
   getid() {
+    // to format XXYYZZ
     return (
       (this.location.floor < 10 ? "0" : "") +
       this.location.floor +
@@ -37,14 +42,15 @@ class LED {
       "Successful. You have pinged LED id: " +
       this.getid() +
       ". State: " +
-      this.state +
+      this.flipstate +
       ". Dim: " +
-      this.dim
+      this.dimsstate
     );
   }
 }
 
 function initializeLEDs(floors, rooms, ledCount) {
+  let ledArray = [];
   for (let i = 0; i < floors; i++) {
     for (let j = 0; j < rooms; j++) {
       for (let k = 0; k < ledCount; k++) {
@@ -53,6 +59,7 @@ function initializeLEDs(floors, rooms, ledCount) {
       }
     }
   }
+  return ledArray;
 }
 
 function initializeMQTTBroker() {
@@ -66,9 +73,8 @@ function initializeMQTTBroker() {
   });
 
   client.on("message", (topic, message) => {
-    console.log(topic + " = " + message);
-    console.log("Array index: " + getLEDIndex(topic));
-    console.log(ledArray[getLEDIndex(topic)].ping());
+    let arrayIndex = getLEDIndex(topic);
+    handleLEDLogic(arrayIndex, message.toString(), client);
   });
 }
 
@@ -78,8 +84,8 @@ function getLEDIndex(topic) {
   let floor = id.substring(0, 2);
   let room = id.substring(2, 4);
   let ledid = id.substring(4, 6);
-  // The following is the formula to get index of LED based on its ID (xxyyzz)
-  // where xx is floor, yy is room, zz is ledid
+  // The following is the formula to get ledArray index of LED based on
+  // its ID (xxyyzz) where xx is floor, yy is room, zz is ledid
   // It is an unconventional way to do it, but this is not our business logic.
   // It is simply to emulate the LEDs.
   let arrayindex =
@@ -87,8 +93,33 @@ function getLEDIndex(topic) {
   return arrayindex;
 }
 
-let ledArray = [];
-initializeLEDs(floors, rooms, ledCount);
+function handleLEDLogic(arrayIndex, message, client) {
+  let topic = "/sit314sagufproject/ledresponse/" + ledArray[arrayIndex].getid();
+  let response = "";
+  switch (message) {
+    case "flip":
+      ledArray[arrayIndex].flip();
+      response = "Successful.";
+      break;
+    case "dim":
+      ledArray[arrayIndex].dimsstatelight();
+      response = "Successful.";
+      break;
+    case "ping":
+      response = ledArray[arrayIndex].ping();
+      break;
+    case "state":
+      response = ledArray[arrayIndex].returnstate().toString();
+      break;
+    case "dimstate":
+      response = ledArray[arrayIndex].returndimsstate();
+      break;
+    default:
+      response = "Unknown operation";
+      break;
+  }
+  client.publish(topic, response);
+}
+
+let ledArray = initializeLEDs(floors, rooms, ledCount);
 initializeMQTTBroker();
-//console.log(ledArray[205].getid());
-console.log(ledArray[1334].locate());
