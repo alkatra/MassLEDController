@@ -1,6 +1,6 @@
 //////////////////////////////////////////
 //////////////////////////////////////////
-// CLIENT.JS /////////////////////////////
+// THIS IS FOR TESTING PURPOSES ONLY /////
 //////////////////////////////////////////
 //////////////////////////////////////////
 
@@ -13,15 +13,11 @@ client.on("connect", () => {
 });
 
 function publishAlertfulDrone() {
-  // THIS PUBLISHES A STATIC DATA DRONE TO TRIGGER SECOND CEP SCENARIO
   console.log("submitting");
-  let topic = "/sit314sagufproject/led/061600";
+  let topic = "/sit314sagufproject/led/061601";
   let message = "flip";
   client.publish(topic, message);
-  topic = "/sit314sagufproject/led/061600";
-  message = "dim";
-  client.publish(topic, message);
-  topic = "/sit314sagufproject/led/061600";
+  topic = "/sit314sagufproject/led/061601";
   message = "ping";
   client.publish(topic, message);
 }

@@ -101,7 +101,8 @@ function getLEDIndex(topic) {
   // It is an unconventional way to do it, but this is not our business logic.
   // It is simply to emulate the LEDs.
   let arrayindex =
-    parseInt(floor) * 200 + parseInt(room) * 10 + parseInt(ledid);
+    parseInt(floor) * rooms * ledCount +
+    (parseInt(room) * ledCount + parseInt(ledid));
   return arrayindex;
 }
 
