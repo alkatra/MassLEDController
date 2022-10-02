@@ -2,6 +2,7 @@
 const floors = 8;
 const rooms = 20;
 const ledCount = 10;
+const TOTAL = 1600;
 const MQTTuniqueURL = "/sit314sagufproject/";
 
 class LED {
@@ -84,6 +85,7 @@ function initializeMQTTBroker() {
 
   client.on("message", (topic, message) => {
     let arrayIndex = getLEDIndex(topic);
+    // Ask LED Class to handle MQTT message and send response.
     ledArray[arrayIndex].handleMQTTMessage(message.toString(), client);
   });
 }
