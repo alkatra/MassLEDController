@@ -2,6 +2,7 @@
 const floors = 8;
 const rooms = 20;
 const ledCount = 10;
+const MQTTuniqueURL = "/sit314sgfproject/";
 
 class LED {
   constructor(state, dim, location) {
@@ -23,11 +24,11 @@ class LED {
   }
   getid() {
     return (
-      "" +
+      (this.location.floor < 10 ? "0" : "") +
       this.location.floor +
-      "" +
+      (this.location.room < 10 ? "0" : "") +
       this.location.room +
-      "" +
+      (this.location.ledid < 10 ? "0" : "") +
       this.location.ledid
     );
   }
@@ -43,8 +44,6 @@ class LED {
   }
 }
 
-let ledArray = [];
-
 function initializeLEDs(floors, rooms, ledCount) {
   for (let i = 0; i < floors; i++) {
     for (let j = 0; j < rooms; j++) {
@@ -56,12 +55,40 @@ function initializeLEDs(floors, rooms, ledCount) {
   }
 }
 
+function initializeMQTTBroker() {
+  const mqtt = require("mqtt");
+  const client = mqtt.connect("mqtt://broker.hivemq.com:1883");
+  let filter = MQTTuniqueURL + "led/#";
+  client.on("connect", () => {
+    console.log("mqtt connected");
+    client.subscribe(filter);
+    console.log("Filter using parameters: " + filter);
+  });
+
+  client.on("message", (topic, message) => {
+    console.log(topic + " = " + message);
+    console.log("Array index: " + getLEDIndex(topic));
+    console.log(ledArray[getLEDIndex(topic)].ping());
+  });
+}
+
+function getLEDIndex(topic) {
+  let topics = topic.split("/");
+  let id = topics[3];
+  let floor = id.substring(0, 2);
+  let room = id.substring(2, 4);
+  let ledid = id.substring(4, 6);
+  // The following is the formula to get index of LED based on its ID (xxyyzz)
+  // where xx is floor, yy is room, zz is ledid
+  // It is an unconventional way to do it, but this is not our business logic.
+  // It is simply to emulate the LEDs.
+  let arrayindex =
+    parseInt(floor) * 200 + parseInt(room) * 10 + parseInt(ledid);
+  return arrayindex;
+}
+
+let ledArray = [];
 initializeLEDs(floors, rooms, ledCount);
-
-console.log(ledArray[1].ping());
-ledArray[1].dimlight();
-ledArray[1].flip();
-ledArray[1].dimlight();
-ledArray[1].flip();
-
-console.log(ledArray[1].ping());
+initializeMQTTBroker();
+//console.log(ledArray[205].getid());
+console.log(ledArray[1334].locate());
