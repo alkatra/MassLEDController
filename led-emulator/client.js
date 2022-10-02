@@ -19,7 +19,7 @@ function publishAlertfulDrone() {
   let message = "flip";
   client.publish(topic, message);
   topic = "/sit314sagufproject/led/061600";
-  message = "";
+  message = "dim";
   client.publish(topic, message);
   topic = "/sit314sagufproject/led/061600";
   message = "ping";

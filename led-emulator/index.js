@@ -10,22 +10,42 @@ class LED {
     this.dimsstate = dimsstate; // True = lit but dimsstate
     this.location = location; // JSON = {floor:x, room:y, ledid:z}
   }
-  flip() {
-    this.flipstate = !this.flipstate;
-    if (!this.flipstate && this.dimsstate) this.dimsstate = !this.dimsstate;
+
+  handleMQTTMessage(message, mqttClient) {
+    let topic = "/sit314sagufproject/ledresponse/" + this.getid();
+    let response = "";
+    switch (message) {
+      case "flip":
+        this.flipstate = !this.flipstate;
+        if (!this.flipstate && this.dimsstate) this.dimsstate = !this.dimsstate;
+        response = "Successful.";
+        break;
+      case "dim":
+        if (this.flipstate) this.dimsstate = !this.dimsstate;
+        response = "Successful.";
+        break;
+      case "ping":
+        response =
+          "Successful. You have pinged LED id: " +
+          this.getid() +
+          ". State: " +
+          this.flipstate +
+          ". Dim: " +
+          this.dimsstate;
+        break;
+      case "state":
+        response = this.flipstate.toString();
+        break;
+      case "dimstate":
+        response = this.dimsstate.toString();
+        break;
+      default:
+        response = "Unknown operation";
+        break;
+    }
+    mqttClient.publish(topic, response);
   }
-  dimsstatelight() {
-    if (this.flipstate) this.dimsstate = !this.dimsstate;
-  }
-  locate() {
-    return this.location;
-  }
-  returnstate() {
-    return this.flipstate;
-  }
-  returndimsstate() {
-    return this.dimsstate;
-  }
+
   getid() {
     // to format XXYYZZ
     return (
@@ -35,16 +55,6 @@ class LED {
       this.location.room +
       (this.location.ledid < 10 ? "0" : "") +
       this.location.ledid
-    );
-  }
-  ping() {
-    return (
-      "Successful. You have pinged LED id: " +
-      this.getid() +
-      ". State: " +
-      this.flipstate +
-      ". Dim: " +
-      this.dimsstate
     );
   }
 }
@@ -74,7 +84,7 @@ function initializeMQTTBroker() {
 
   client.on("message", (topic, message) => {
     let arrayIndex = getLEDIndex(topic);
-    handleLEDLogic(arrayIndex, message.toString(), client);
+    ledArray[arrayIndex].handleMQTTMessage(message.toString(), client);
   });
 }
 
@@ -91,34 +101,6 @@ function getLEDIndex(topic) {
   let arrayindex =
     parseInt(floor) * 200 + parseInt(room) * 10 + parseInt(ledid);
   return arrayindex;
-}
-
-function handleLEDLogic(arrayIndex, message, client) {
-  let topic = "/sit314sagufproject/ledresponse/" + ledArray[arrayIndex].getid();
-  let response = "";
-  switch (message) {
-    case "flip":
-      ledArray[arrayIndex].flip();
-      response = "Successful.";
-      break;
-    case "dim":
-      ledArray[arrayIndex].dimsstatelight();
-      response = "Successful.";
-      break;
-    case "ping":
-      response = ledArray[arrayIndex].ping();
-      break;
-    case "state":
-      response = ledArray[arrayIndex].returnstate().toString();
-      break;
-    case "dimstate":
-      response = ledArray[arrayIndex].returndimsstate();
-      break;
-    default:
-      response = "Unknown operation";
-      break;
-  }
-  client.publish(topic, response);
 }
 
 let ledArray = initializeLEDs(floors, rooms, ledCount);
