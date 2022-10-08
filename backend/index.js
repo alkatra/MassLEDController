@@ -43,6 +43,7 @@ app.get("/api/test", (req, res) => {
 
 app.get("/api/user", (req, res) => {
   console.log("Got it");
+  res.status(200).send("Awesome");
   // User.find({}, (err, users) => {
   //   console.warn("ERROR");
   //   return err ? res.send(err) : res.send(users);
