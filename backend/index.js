@@ -42,8 +42,12 @@ const port = 5000;
 // }); //works
 
 app.get("/api/user", (req, res) => {
-  console.log("Got it");
-  res.status(200).send("Awesome");
+  try {
+    console.log("Got it");
+    res.status(200).send("Awesome");
+  } catch (e) {
+    console.log(e);
+  }
   // User.find({}, (err, users) => {
   //   console.warn("ERROR");
   //   return err ? res.send(err) : res.send(users);
