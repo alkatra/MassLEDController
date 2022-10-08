@@ -43,10 +43,10 @@ app.get("/api/test", (req, res) => {
 
 app.get("/api/user", (req, res) => {
   console.log("Got it");
-  User.find({}, (err, users) => {
-    console.warn("ERROR");
-    return err ? res.send(err) : res.send(users);
-  });
+  // User.find({}, (err, users) => {
+  //   console.warn("ERROR");
+  //   return err ? res.send(err) : res.send(users);
+  // });
 });
 
 app.get("/api/led", (req, res) => {
