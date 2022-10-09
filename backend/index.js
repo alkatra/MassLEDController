@@ -7,7 +7,7 @@ const LED = require("./models/LED");
 const fetch = require("node-fetch");
 
 const microserviceURL =
-  "http://microservice-balancer-834917492.us-east-1.elb.amazonaws.com:5000/api/";
+  "http://microservice-balance-529083895.us-east-1.elb.amazonaws.com:5000/api/";
 
 const app = express();
 const port = 5000;
