@@ -44,6 +44,7 @@ class LED {
         response = "Unknown operation";
         break;
     }
+    console.log("[OUTGOING]" + topic + "  ->  " + response);
     mqttClient.publish(topic, response);
   }
 
@@ -84,6 +85,7 @@ function initializeMQTTBroker() {
   });
 
   client.on("message", (topic, message) => {
+    console.log("[INCOMING]" + topic + "  ->  " + message);
     let arrayIndex = getLEDIndex(topic);
     // Ask LED Class to handle MQTT message and send response.
     ledArray[arrayIndex].handleMQTTMessage(message.toString(), client);

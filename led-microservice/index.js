@@ -25,6 +25,8 @@ const FLOORS = 8;
 const ROOMS = 20;
 const LEDCOUNT = 10;
 
+app.get("/", (req, res) => res.status(200).send("OK"));
+
 app.post("/api/toggle", async (req, res) => {
   console.log(req.body);
   let ledid = req.body.ledid;
