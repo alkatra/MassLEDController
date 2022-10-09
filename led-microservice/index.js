@@ -18,29 +18,17 @@ const FLOORS = 8;
 const ROOMS = 20;
 const LEDCOUNT = 10;
 
-let responses = [];
-
 app.post("/api/toggle", async (req, res) => {
   console.log(req.body);
   let ledid = req.body.ledid;
   let topic = "/sit314sagufproject/led/" + ledid;
   let message = "flip";
   client.publish(topic, message);
-  responses.push({
-    responseObject: res,
-    topic: "/sit314sagufproject/ledresponse/" + ledid,
-  });
+  res.status(200).send("Success");
 });
 
 client.on("message", (topic, message) => {
-  let i = undefined;
-  responses.forEach((response, idx) => {
-    if (response.topic == topic) {
-      response.responseObject.status(200).send({ msg: "Success" });
-      i = idx;
-    }
-  });
-  if (i != undefined) responses.splice(i, 1); //remove
+  console.log(message + " from " + topic);
 });
 
 app.listen(port, () => {
