@@ -121,16 +121,17 @@ app.get("/api/user", (req, res) => {
 });
 
 app.get("/api/access", (req, res) => {
-  if (req.access == "admin") {
-    LED.find({}, (err, led) => {
-      return err ? res.status(404).send(err) : res.status(200).send({ led });
-    });
-  } else {
-    let stringx = req.access.substring(0, 2) + "[0-9]{4}";
-    LED.find({ ledid: { $regex: new RegExp(stringx) } }, (err, led) => {
-      return err ? res.status(404).send(err) : res.status(200).send({ led });
-    });
-  }
+  // Disabled cookie testing (authentication) for benchmarking system from fetch requests.
+  // if (req.access == "admin") {
+  LED.find({}, (err, led) => {
+    return err ? res.status(404).send(err) : res.status(200).send({ led });
+  });
+  // } else {
+  //   let stringx = req.access.substring(0, 2) + "[0-9]{4}";
+  //   LED.find({ ledid: { $regex: new RegExp(stringx) } }, (err, led) => {
+  //     return err ? res.status(404).send(err) : res.status(200).send({ led });
+  //   });
+  // }
 });
 
 app.post("/api/toggle", async (req, res) => {
