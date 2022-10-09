@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const base = `${__dirname}/public`;
 const User = require("./models/User");
 const LED = require("./models/LED");
+const fetch = require("node-fetch");
 
 const microserviceURL = "http://34.195.33.192:5000/api/";
 
@@ -19,7 +20,6 @@ mongoose.connect(MONGO, { useNewUrlParser: true, useUnifiedTopology: true });
 var cookieParser = require("cookie-parser");
 var cookies = [];
 app.use(cookieParser());
-import fetch from "node-fetch";
 const FLOORS = 8;
 const ROOMS = 20;
 const LEDCOUNT = 10;
