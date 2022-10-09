@@ -5,7 +5,7 @@ const base = `${__dirname}/public`;
 const User = require("./models/User");
 const LED = require("./models/LED");
 
-const microserviceURL = "";
+const microserviceURL = "http://34.195.33.192:5000/api/";
 
 const app = express();
 const port = 5000;
@@ -17,7 +17,7 @@ app.use(cookieParser());
 const MONGO = "mongodb://root:root@35.174.221.105:27017";
 mongoose.connect(MONGO, { useNewUrlParser: true, useUnifiedTopology: true });
 
-var cookieParser = require("cookie-parser");
+import cookieParser from "cookie-parser";
 var cookies = [];
 
 const FLOORS = 8;
@@ -144,12 +144,7 @@ app.post("/api/toggle", async (req, res) => {
     //other options
   }).then(async (response) => {
     let ledarray = await response.json();
-    ledarrayG = ledarray.led;
-
-    let floors = extractFloors();
-    floors.forEach((floor) => {
-      document.getElementById("get").innerHTML += returnFloorFlexBox(floor);
-    });
+    console.log(ledarray);
   });
   // LED.find({ ledid: req.body.ledid }, (err, led) => {
   //   if (err) res.status(500).send(err);
