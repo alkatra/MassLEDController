@@ -5,12 +5,13 @@ const base = `${__dirname}/public`;
 const User = require("./models/User");
 const LED = require("./models/LED");
 const fetch = require("node-fetch");
-
 const microserviceURL =
   "http://microservice-balance-529083895.us-east-1.elb.amazonaws.com:5000/api/";
 
 const app = express();
 const port = 5000;
+var cors = require("cors");
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static(__dirname + "/public/"));
@@ -26,31 +27,13 @@ const ROOMS = 20;
 const LEDCOUNT = 10;
 
 app.use(function (req, res, next) {
-  req.access = ""; // clean any value that attacker may have set.
-
-  var cookie = req.cookies["massledauth"];
-  cookies.forEach((element) => {
-    if (element.value == cookie) {
-      req.access = element.access;
-    }
-  });
-
-  res.setHeader("Access-Control-Allow-Origin", "*");
-
-  // Request methods you wish to allow
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, OPTIONS, PUT, PATCH, DELETE"
-  );
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  // Set to true if you need the website to include cookies in the requests sent
-  // to the API (e.g. in case you use sessions)
-  res.setHeader("Access-Control-Allow-Credentials", true);
-
-  // Pass to next layer of middleware
+  // req.access = ""; // clean any value that attacker may have set.
+  // var cookie = req.cookies["massledauth"];
+  // cookies.forEach((element) => {
+  //   if (element.value == cookie) {
+  //     req.access = element.access;
+  //   }
+  // });
   next();
 });
 
