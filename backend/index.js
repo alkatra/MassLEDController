@@ -143,10 +143,10 @@ app.post("/api/toggle", (req, res) => {
     if (err) res.status(500).send(err);
     LED.findOneAndUpdate(
       { ledid: req.body.ledid },
-      { state: !led[0]?.state },
+      { state: !led[0].state },
       (err, ledx) => {
         if (err) res.status(500).send(err);
-        res.status(200).send({ now: !led[0]?.state });
+        res.status(200).send({ now: !led[0].state });
       }
     );
   });
