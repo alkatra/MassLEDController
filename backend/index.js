@@ -134,6 +134,7 @@ app.get("/api/access", (req, res) => {
 });
 
 app.post("/api/toggle", async (req, res) => {
+  // Disabled cookie testing (authentication) for benchmarking system from fetch requests.
   let urlx = microserviceURL + "toggle";
   await fetch(urlx, {
     method: "POST",
