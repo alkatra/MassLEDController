@@ -19,6 +19,8 @@ client.on("connect", () => {
 
 const port = 5000;
 
+let responses = [];
+
 const FLOORS = 8;
 const ROOMS = 20;
 const LEDCOUNT = 10;
@@ -29,11 +31,27 @@ app.post("/api/toggle", async (req, res) => {
   let topic = "/sit314sagufproject/led/" + ledid;
   let message = "flip";
   client.publish(topic, message);
-  res.status(200).send("Success");
+  responses.push({
+    object: res,
+    topic: "/sit314sagufproject/ledresponse/" + ledid,
+  });
+  //   res.status(200).send("Success");
 });
 
 client.on("message", (topic, message) => {
   console.log(message + " from " + topic);
+  let removed = undefined;
+  responses.forEach((response, index) => {
+    if (response.topic == topic) {
+      if (message == "Successful.") {
+        response.res.status(200).send(message);
+      } else {
+        response.res.status(400).send(message);
+      }
+      removed = index;
+    }
+  });
+  responses.splice(removed, 1);
 });
 
 app.listen(port, () => {
