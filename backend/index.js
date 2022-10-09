@@ -19,7 +19,7 @@ mongoose.connect(MONGO, { useNewUrlParser: true, useUnifiedTopology: true });
 var cookieParser = require("cookie-parser");
 var cookies = [];
 app.use(cookieParser());
-
+var fetch = require("node-fetch");
 const FLOORS = 8;
 const ROOMS = 20;
 const LEDCOUNT = 10;
