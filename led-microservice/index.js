@@ -35,7 +35,6 @@ app.post("/api/toggle", async (req, res) => {
     res: res,
     topic: "/sit314sagufproject/ledresponse/" + ledid,
   });
-  //   res.status(200).send("Success");
 });
 
 client.on("message", (topic, message) => {

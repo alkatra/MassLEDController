@@ -143,20 +143,20 @@ app.post("/api/toggle", async (req, res) => {
     body: JSON.stringify({ ledid: req.body.ledid }),
     //other options
   }).then(async (response) => {
-    // let ledarray = await response.json();
-    console.log(response.status);
+    if (response.status == 200) {
+      LED.find({ ledid: req.body.ledid }, (err, led) => {
+        if (err) res.status(500).send(err);
+        LED.findOneAndUpdate(
+          { ledid: req.body.ledid },
+          { state: !led[0].state },
+          (err, ledx) => {
+            if (err) res.status(500).send(err);
+            res.status(200).send({ now: !led[0].state });
+          }
+        );
+      });
+    }
   });
-  // LED.find({ ledid: req.body.ledid }, (err, led) => {
-  //   if (err) res.status(500).send(err);
-  //   LED.findOneAndUpdate(
-  //     { ledid: req.body.ledid },
-  //     { state: !led[0].state },
-  //     (err, ledx) => {
-  //       if (err) res.status(500).send(err);
-  //       res.status(200).send({ now: !led[0].state });
-  //     }
-  //   );
-  // });
 });
 
 app.get("/api/led", (req, res) => {
