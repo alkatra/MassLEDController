@@ -63,4 +63,4 @@ async function group(string) {
   } while (true);
 }
 
-group("01");
+group("02");

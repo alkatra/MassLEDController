@@ -133,7 +133,7 @@ app.post("/api/toggle", async (req, res) => {
         //   Accept: "application/json",
         "Content-Type": "application/json",
       },
-      timeout: 1500,
+      timeout: 5000,
       body: JSON.stringify({ ledid: req.body.ledid }),
       //other options
     }).then(async (response) => {
