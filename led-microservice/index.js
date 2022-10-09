@@ -35,7 +35,7 @@ client.on("message", (topic, message) => {
   let i = undefined;
   responses.forEach((response, idx) => {
     if (response.topic == topic) {
-      response.res.status(200).send({ msg: "Success" });
+      response.responseObject.status(200).send({ msg: "Success" });
       i = idx;
     }
   });

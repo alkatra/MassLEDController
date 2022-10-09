@@ -135,7 +135,7 @@ app.get("/api/access", (req, res) => {
 app.post("/api/toggle", async (req, res) => {
   let urlx = microserviceURL + "toggle";
   await fetch(urlx, {
-    method: "GET",
+    method: "POST",
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
