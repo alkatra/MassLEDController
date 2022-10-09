@@ -4,7 +4,12 @@ const app = express();
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-
+app.options("/", (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "*");
+  res.setHeader("Access-Control-Allow-Headers", "*");
+  res.end();
+});
 const mqtt = require("mqtt");
 const client = mqtt.connect("mqtt://broker.hivemq.com:1883");
 client.on("connect", () => {
