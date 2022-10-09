@@ -97,7 +97,7 @@ app.post("/api/login", async (req, res) => {
   let success = false;
   await User.find({ username: req.body.username }).then((users) => {
     users.forEach((element) => {
-      if (element?.password == req.body.password) {
+      if (element.password == req.body.password) {
         let cookiex = {
           value: Math.floor(Math.random() * 1000000000),
           username: req.body.username,
