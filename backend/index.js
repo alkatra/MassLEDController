@@ -1,28 +1,25 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const MONGO = "mongodb://root:root@35.174.221.105:27017";
-mongoose.connect(MONGO, { useNewUrlParser: true, useUnifiedTopology: true });
-const app = express();
 const bodyParser = require("body-parser");
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "http://localhost:5000");
-  res.header("Access-Control-Allow-Credentials", "true");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  next();
-});
-const port = 5000;
+const base = `${__dirname}/public`;
 const User = require("./models/User");
 const LED = require("./models/LED");
-const base = `${__dirname}/public`;
+
+const microserviceURL = "";
+
+const app = express();
+const port = 5000;
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 app.use(express.static("public"));
-var cookieParser = require("cookie-parser");
 app.use(cookieParser());
+
+const MONGO = "mongodb://root:root@35.174.221.105:27017";
+mongoose.connect(MONGO, { useNewUrlParser: true, useUnifiedTopology: true });
+
+var cookieParser = require("cookie-parser");
 var cookies = [];
+
 const FLOORS = 8;
 const ROOMS = 20;
 const LEDCOUNT = 10;
@@ -44,13 +41,10 @@ app.use(function (req, res, next) {
     "Access-Control-Allow-Methods",
     "GET, POST, OPTIONS, PUT, PATCH, DELETE"
   );
-
-  // Request headers you wish to allow
-  res.setHeader(
+  res.header(
     "Access-Control-Allow-Headers",
-    "X-Requested-With,content-type"
+    "Origin, X-Requested-With, Content-Type, Accept"
   );
-
   // Set to true if you need the website to include cookies in the requests sent
   // to the API (e.g. in case you use sessions)
   res.setHeader("Access-Control-Allow-Credentials", true);
@@ -138,18 +132,36 @@ app.get("/api/access", (req, res) => {
   }
 });
 
-app.post("/api/toggle", (req, res) => {
-  LED.find({ ledid: req.body.ledid }, (err, led) => {
-    if (err) res.status(500).send(err);
-    LED.findOneAndUpdate(
-      { ledid: req.body.ledid },
-      { state: !led[0].state },
-      (err, ledx) => {
-        if (err) res.status(500).send(err);
-        res.status(200).send({ now: !led[0].state });
-      }
-    );
+app.post("/api/toggle", async (req, res) => {
+  let urlx = microserviceURL + "toggle";
+  await fetch(urlx, {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    //other options
+  }).then(async (response) => {
+    let ledarray = await response.json();
+    ledarrayG = ledarray.led;
+
+    let floors = extractFloors();
+    floors.forEach((floor) => {
+      document.getElementById("get").innerHTML += returnFloorFlexBox(floor);
+    });
   });
+  // LED.find({ ledid: req.body.ledid }, (err, led) => {
+  //   if (err) res.status(500).send(err);
+  //   LED.findOneAndUpdate(
+  //     { ledid: req.body.ledid },
+  //     { state: !led[0].state },
+  //     (err, ledx) => {
+  //       if (err) res.status(500).send(err);
+  //       res.status(200).send({ now: !led[0].state });
+  //     }
+  //   );
+  // });
 });
 
 app.get("/api/led", (req, res) => {
