@@ -136,10 +136,10 @@ app.post("/api/toggle", async (req, res) => {
   let urlx = microserviceURL + "toggle";
   await fetch(urlx, {
     method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
+    // headers: {
+    //   Accept: "application/json",
+    //   "Content-Type": "application/json",
+    // },
     body: { ledid: req.body.ledid },
     //other options
   }).then(async (response) => {
