@@ -12,13 +12,13 @@ const port = 5000;
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static("public"));
-app.use(cookieParser());
 
 const MONGO = "mongodb://root:root@35.174.221.105:27017";
 mongoose.connect(MONGO, { useNewUrlParser: true, useUnifiedTopology: true });
 
 var cookieParser = require("cookie-parser");
 var cookies = [];
+app.use(cookieParser());
 
 const FLOORS = 8;
 const ROOMS = 20;
