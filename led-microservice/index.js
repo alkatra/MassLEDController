@@ -21,6 +21,7 @@ const LEDCOUNT = 10;
 let responses = [];
 
 app.post("/api/toggle", async (req, res) => {
+  console.log(req.body);
   let ledid = req.body.ledid;
   let topic = "/sit314sagufproject/led/" + ledid;
   let message = "flip";
