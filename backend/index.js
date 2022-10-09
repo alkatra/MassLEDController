@@ -140,7 +140,6 @@ app.post("/api/toggle", async (req, res) => {
       Accept: "application/json",
       "Content-Type": "application/json",
     },
-    credentials: "include",
     body: { ledid: req.body.ledid },
     //other options
   }).then(async (response) => {
