@@ -1,5 +1,4 @@
-const url =
-  "http://backend-balance-1421980668.us-east-1.elb.amazonaws.com:5000/api/";
+const url = "http://54.208.202.63:5000/api/";
 var ledarrayG = [];
 
 async function getLEDs() {
