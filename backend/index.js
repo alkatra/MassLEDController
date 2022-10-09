@@ -140,7 +140,7 @@ app.post("/api/toggle", async (req, res) => {
       //   Accept: "application/json",
       "Content-Type": "application/json",
     },
-    body: { ledid: req.body.ledid },
+    body: JSON.stringify({ ledid: req.body.ledid }),
     //other options
   }).then(async (response) => {
     // let ledarray = await response.json();
