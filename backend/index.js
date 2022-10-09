@@ -144,8 +144,8 @@ app.post("/api/toggle", async (req, res) => {
     body: { ledid: req.body.ledid },
     //other options
   }).then(async (response) => {
-    let ledarray = await response.json();
-    console.log(ledarray);
+    // let ledarray = await response.json();
+    console.log(response.status);
   });
   // LED.find({ ledid: req.body.ledid }, (err, led) => {
   //   if (err) res.status(500).send(err);
