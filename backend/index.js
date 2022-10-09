@@ -13,7 +13,7 @@ const app = express();
 const port = 5000;
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(express.static("public"));
+app.use(express.static(__dirname + "/public/"));
 
 const MONGO = "mongodb://root:root@35.174.221.105:27017";
 mongoose.connect(MONGO, { useNewUrlParser: true, useUnifiedTopology: true });
