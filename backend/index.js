@@ -17,7 +17,7 @@ app.use(cookieParser());
 const MONGO = "mongodb://root:root@35.174.221.105:27017";
 mongoose.connect(MONGO, { useNewUrlParser: true, useUnifiedTopology: true });
 
-import cookieParser from "cookie-parser";
+var cookieParser = require("cookie-parser");
 var cookies = [];
 
 const FLOORS = 8;
@@ -34,7 +34,7 @@ app.use(function (req, res, next) {
     }
   });
 
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:5000");
+  res.setHeader("Access-Control-Allow-Origin", "*");
 
   // Request methods you wish to allow
   res.setHeader(
