@@ -126,29 +126,34 @@ app.get("/api/access", (req, res) => {
 app.post("/api/toggle", async (req, res) => {
   // Disabled cookie testing (authentication) for benchmarking system from fetch requests.
   let urlx = microserviceURL + "toggle";
-  await fetch(urlx, {
-    method: "POST",
-    headers: {
-      //   Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ ledid: req.body.ledid }),
-    //other options
-  }).then(async (response) => {
-    if (response.status == 200) {
-      LED.find({ ledid: req.body.ledid }, (err, led) => {
-        if (err) res.status(500).send(err);
-        LED.findOneAndUpdate(
-          { ledid: req.body.ledid },
-          { state: !led[0].state },
-          (err, ledx) => {
-            if (err) res.status(500).send(err);
-            res.status(200).send({ now: !led[0].state });
-          }
-        );
-      });
-    }
-  });
+  try {
+    await fetch(urlx, {
+      method: "POST",
+      headers: {
+        //   Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      timeout: 1500,
+      body: JSON.stringify({ ledid: req.body.ledid }),
+      //other options
+    }).then(async (response) => {
+      if (response.status == 200) {
+        LED.find({ ledid: req.body.ledid }, (err, led) => {
+          if (err) res.status(500).send(err);
+          LED.findOneAndUpdate(
+            { ledid: req.body.ledid },
+            { state: !led[0].state },
+            (err, ledx) => {
+              if (err) res.status(500).send(err);
+              res.status(200).send({ now: !led[0].state });
+            }
+          );
+        });
+      }
+    });
+  } catch (e) {
+    res.status(400).send(e);
+  }
 });
 
 app.get("/api/led", (req, res) => {
