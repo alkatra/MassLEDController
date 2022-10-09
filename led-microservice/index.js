@@ -32,7 +32,7 @@ app.post("/api/toggle", async (req, res) => {
   let message = "flip";
   client.publish(topic, message);
   responses.push({
-    object: res,
+    res: res,
     topic: "/sit314sagufproject/ledresponse/" + ledid,
   });
   //   res.status(200).send("Success");
