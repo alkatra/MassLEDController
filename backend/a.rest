@@ -1,4 +1,4 @@
-POST http://54.226.235.189:5000/api/toggle
+POST http://18.234.237.86:5000/api/led
 Content-Type: application/json
 
 {

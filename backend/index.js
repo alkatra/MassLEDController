@@ -27,13 +27,13 @@ const ROOMS = 20;
 const LEDCOUNT = 10;
 
 app.use(function (req, res, next) {
-  // req.access = ""; // clean any value that attacker may have set.
-  // var cookie = req.cookies["massledauth"];
-  // cookies.forEach((element) => {
-  //   if (element.value == cookie) {
-  //     req.access = element.access;
-  //   }
-  // });
+  req.access = ""; // clean any value that attacker may have set.
+  var cookie = req.cookies["massledauth"];
+  cookies.forEach((element) => {
+    if (element.value == cookie) {
+      req.access = element.access;
+    }
+  });
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "GET, PUT, POST");
   res.header(
@@ -111,16 +111,16 @@ app.get("/api/user", (req, res) => {
 
 app.get("/api/access", (req, res) => {
   // Disabled cookie testing (authentication) for benchmarking system from fetch requests.
-  // if (req.access == "admin") {
-  LED.find({}, (err, led) => {
-    return err ? res.status(404).send(err) : res.status(200).send({ led });
-  });
-  // } else {
-  //   let stringx = req.access.substring(0, 2) + "[0-9]{4}";
-  //   LED.find({ ledid: { $regex: new RegExp(stringx) } }, (err, led) => {
-  //     return err ? res.status(404).send(err) : res.status(200).send({ led });
-  //   });
-  // }
+  if (req.access == "admin") {
+    LED.find({}, (err, led) => {
+      return err ? res.status(404).send(err) : res.status(200).send({ led });
+    });
+  } else {
+    let stringx = req.access.substring(0, 2) + "[0-9]{4}";
+    LED.find({ ledid: { $regex: new RegExp(stringx) } }, (err, led) => {
+      return err ? res.status(404).send(err) : res.status(200).send({ led });
+    });
+  }
 });
 
 app.post("/api/toggle", async (req, res) => {
