@@ -1,5 +1,5 @@
 //<div class="d-inline-flex p-2">I'm an inline flexbox container!</div>
-const url = "http://54.208.202.63:5000/api/";
+const url = "http://18.234.237.86:5000/api/";
 
 async function authenticate() {
   let username = document.getElementById("username").value;

@@ -1,4 +1,4 @@
-const url = "http://54.208.202.63:5000/api/";
+const url = "http://18.234.237.86:5000/api/";
 var ledarrayG = [];
 
 async function getLEDs() {
