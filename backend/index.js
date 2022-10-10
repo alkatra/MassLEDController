@@ -156,8 +156,8 @@ app.post("/api/toggle", async (req, res) => {
   }
 });
 
-app.get("/api/led", (req, res) => {
-  LED.find({ ledid: "000105" }, (err, users) => {
+app.get("/api/:ledid", (req, res) => {
+  LED.find({ ledid: req.query.ledid }, (err, users) => {
     return err ? res.status(404).send(err) : res.status(200).send(users);
   });
 });
